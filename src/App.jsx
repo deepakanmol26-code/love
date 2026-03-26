@@ -15,6 +15,12 @@ const ArrowDownIcon = () => (
   </svg>
 );
 
+const MapPinIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon-map-pin">
+    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+  </svg>
+);
+
 function App() {
   
   // Parallax effect and IntersectionObserver for transitions
@@ -124,6 +130,38 @@ function App() {
           <div className="polaroid reveal-scale delay-500">
             <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Polaroid Memory" />
             <span>Paris, Autumn 2024</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Map Section */}
+      <section id="map" className="map-section">
+        <div className="map-header">
+          <div className="reveal-fade-up">
+            <MapPinIcon />
+          </div>
+          <h2 className="map-heading reveal-fade-up delay-200">The Map</h2>
+          <p className="map-subtext reveal-fade-up delay-400">
+            Where the story began — the ancient land of Mithila paintings and timeless traditions.
+          </p>
+        </div>
+
+        <div className="map-container reveal-scale delay-300">
+          <div className="map-frame">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57327.89671454382!2d86.05!3d26.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39edeb0a69b0a4e3%3A0xc4053f4776a1e3bf!2sMadhubani%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Madhubani, Bihar"
+            ></iframe>
+          </div>
+          <div className="map-location-tag reveal-fade-up delay-600">
+            <span className="map-dot"></span>
+            Madhubani, Bihar — India
           </div>
         </div>
       </section>
