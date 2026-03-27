@@ -1,13 +1,24 @@
 :root {
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
+  /* Sci-Fi Dark Color Palette */
+  --bg-deep: #050814;
+  --bg-panel: #0a0d1c;
+  --bg-card: rgba(15, 20, 35, 0.6);
+  --bg-card-hover: rgba(22, 30, 50, 0.8);
   
-  --bg-color: #f6f5f1;
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --accent-gold: #b39b75;
-  --accent-gold-light: #c5b290;
-  --accent-white: #ffffff;
+  --primary-cyan: #00f3ff;
+  --primary-cyan-dim: rgba(0, 243, 255, 0.2);
+  --primary-purple: #9d00ff;
+  --primary-purple-dim: rgba(157, 0, 255, 0.2);
+  
+  --text-main: #e2e8f0;
+  --text-muted: #64748b;
+  --text-cyan: #00f3ff;
+  
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Orbitron', sans-serif;
+
+  --border-glow: inset 0 0 20px rgba(0, 243, 255, 0.05);
 }
 
 * {
@@ -18,16 +29,44 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  line-height: 1.5;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* Adds a subtle deep space noise texture using a repeating radial gradient trick */
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(157, 0, 255, 0.04) 0%, transparent 50%);
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* Custom Webkit Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-panel);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-cyan-dim);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-  font-weight: 400;
+  font-family: var(--font-sans); /* Some headings use sans, some display */
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 a {
@@ -40,4 +79,16 @@ button {
   border: none;
   cursor: pointer;
   font-family: inherit;
+  color: inherit;
+}
+
+/* Base utility classes for SciFi */
+.mono-text {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.glitch-hover:hover {
+  text-shadow: 2px 0 var(--primary-cyan), -2px 0 var(--primary-purple);
 }

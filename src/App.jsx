@@ -1,54 +1,101 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 
-// SVG components for icons
-const EnvelopeIcon = () => (
-  <svg width="40" height="30" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon-envelope">
-    <path d="M2.5 5C2.5 3.61929 3.61929 2.5 5 2.5H35C36.3807 2.5 37.5 3.61929 37.5 5V25C37.5 26.3807 36.3807 27.5 35 27.5H5C3.61929 27.5 2.5 26.3807 2.5 25V5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M37.5 5L20 17.5L2.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+// SVG Icons tailored for Sci-Fi UI
+const IconDNA = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 14.5a3 3 0 0 1 3-3"/>
+    <path d="M4 17.5a3 3 0 0 0 3-3"/>
+    <path d="M8 12a3 3 0 0 1 3-3"/>
+    <path d="M8 15a3 3 0 0 0 3-3"/>
+    <path d="M12 9.5a3 3 0 0 1 3-3"/>
+    <path d="M12 12.5a3 3 0 0 0 3-3"/>
+    <path d="M16 7a3 3 0 0 1 3-3"/>
+    <path d="M16 10a3 3 0 0 0 3-3"/>
+    <path d="M4 9a5 5 0 0 1 10 0 5 5 0 0 0 10 0"/>
+    <path d="M4 15a5 5 0 0 0 10 0 5 5 0 0 1 10 0"/>
   </svg>
 );
 
-const ArrowDownIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+const IconNetwork = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3"/>
+    <circle cx="6" cy="12" r="3"/>
+    <circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
   </svg>
 );
 
-const MapPinIcon = () => (
-  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon-map-pin">
-    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+const IconCube = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+    <polyline points="2 17 12 22 22 17"/>
+    <polyline points="2 12 12 17 22 12"/>
   </svg>
 );
+
+const IconSignal = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/>
+  </svg>
+);
+
+const IconSun = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+  </svg>
+);
+
+// 3D Card Wrapper Hook Component
+const Card3D = ({ children, className, glowColor }) => {
+  const [style, setStyle] = useState({});
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if(!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+    
+    setStyle({
+      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`,
+      transition: 'none',
+      zIndex: 10,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setStyle({
+      transform: 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
+      transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      zIndex: 1,
+    });
+  };
+
+  return (
+    <div 
+      ref={cardRef}
+      className={`card-3d ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+};
 
 function App() {
   
-  // Parallax effect and IntersectionObserver for transitions
+  // Intersection Observer for animations
   useEffect(() => {
-    // Parallax logic
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      
-      const heroBg = document.querySelector('.hero-background img');
-      if (heroBg) {
-        heroBg.style.transform = `translateY(${scrollY * 0.3}px) scale(1.05)`;
-      }
-      
-      const polaroid = document.querySelector('.polaroid');
-      if (polaroid && scrollY > 300) {
-        const rotation = -4 + ((scrollY - 300) * 0.015);
-        polaroid.style.transform = `rotate(${Math.min(rotation, 6)}deg)`;
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    
-    // Initial manual trigger for above-the-fold components
-    setTimeout(() => {
-      document.querySelectorAll('.hero .reveal-fade-up, .navbar .reveal-fade-in').forEach(el => el.classList.add('active'));
-    }, 100);
-
-    // Scroll reveal observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -56,144 +103,198 @@ function App() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.reveal-fade-up:not(.hero *), .reveal-fade-in:not(.navbar *), .reveal-scale').forEach((el) => {
+    document.querySelectorAll('.reveal-fade-up').forEach((el) => {
       observer.observe(el);
     });
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="app-container">
-      {/* Navbar Section */}
-      <nav className="navbar">
-        <div className="nav-brand reveal-fade-in">Deepak & Arunima.</div>
-        <div className="nav-links reveal-fade-in delay-200">
-          <a href="#story" className="active">Our Story</a>
-          <a href="#map">The Map</a>
-          <a href="#letters">Letters</a>
+    <div className="app-canvas">
+      
+      {/* LEFT SIDEBAR */}
+      <aside className="sidebar">
+        <div className="sidebar-icon">
+          <IconDNA />
         </div>
-        <div className="nav-menu-btn reveal-fade-in delay-400">
-          <span></span>
-          <span></span>
-          <span></span>
+        <div className="sidebar-divider"></div>
+        <div className="sidebar-icon active">
+          <IconNetwork />
+          <div className="active-label">SYS-NET</div>
         </div>
-      </nav>
+        <div className="sidebar-icon">
+          <IconCube />
+        </div>
+        <div className="sidebar-divider"></div>
+        <div className="sidebar-icon">
+          <IconSignal />
+        </div>
+      </aside>
 
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-background">
-          <img src="/hero_portrait_1774540729247.png" alt="Deepak & Arunima Hero" />
-          <div className="hero-gradient"></div>
+      {/* TOP NAVIGATION */}
+      <header className="topbar">
+        <div className="logo-brand">
+          Deepak Anmol <span>D.A.</span>
         </div>
+        <div className="nav-links">
+          <a href="#nexus">NEXUS</a>
+          <a href="#archive" className="active">ARCHIVE</a>
+          <a href="#systems">SYSTEMS</a>
+          <a href="#signal">SIGNAL</a>
+        </div>
+        <div className="top-icons">
+          <IconSignal width="18" height="18" />
+          <IconSun width="18" height="18" />
+          <img src="https://i.pravatar.cc/100?img=11" alt="Avatar" className="avatar" />
+        </div>
+      </header>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="main-content">
         
-        <div className="hero-subtitle reveal-fade-up">ESTABLISHED TWO THOUSAND TWENTY FOUR</div>
-        <h1 className="hero-title reveal-fade-up delay-200">
-          <span>Deepak &<br/>Arunima:</span><br/>
-          <span>A Journey of<br/>Two Souls.</span>
-        </h1>
-        
-        <div className="scroll-indicator reveal-fade-up delay-600">
-          <button className="scroll-btn" onClick={() => document.getElementById('story').scrollIntoView({ behavior: 'smooth' })}>
-            <ArrowDownIcon />
-          </button>
-          <span className="scroll-text">SCROLL TO BEGIN</span>
-        </div>
-      </section>
+        {/* Header Title Section */}
+        <div className="temporal-log reveal-fade-up">TEMPORAL LOGS</div>
+        <h1 className="page-title reveal-fade-up delay-100">Work Experience</h1>
+        <p className="page-subtitle reveal-fade-up delay-200">
+          An archival record of technological deployments, capacity building, 
+          and social integration projects across public systems and communities. 
+          Tracking impact parameters from 2022 to present.
+        </p>
 
-      {/* Story Section */}
-      <section id="story" className="story-section">
-        <div className="story-content">
-          <div className="badge reveal-fade-up">THE BEGINNING</div>
-          <h2 className="story-headline reveal-fade-up delay-200">
-            A curated<br/>
-            collection of<br/>
-            <i>precious<br/>minutes</i> and<br/>
-            quiet<br/>
-            whispers.
-          </h2>
-          <p className="story-text reveal-fade-up delay-400">
-            This monograph is more than a timeline; it is an editorial exploration of a shared life. From the cobblestone streets of old cities to the silent mornings at home, every frame captured here is a testament to a quiet, enduring grace.
-          </p>
-          <div className="reveal-fade-up delay-600">
-            <a href="#" className="explore-link">EXPLORE THE ARCHIVE</a>
-          </div>
-        </div>
-        
-        <div className="story-visuals">
-          <img src="/story_man_1774540754560.png" alt="Portrait" className="main-portrait reveal-scale delay-200" />
-          <div className="polaroid reveal-scale delay-500">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Polaroid Memory" />
-            <span>Paris, Autumn 2024</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Map Section */}
-      <section id="map" className="map-section">
-        <div className="map-header">
-          <div className="reveal-fade-up">
-            <MapPinIcon />
-          </div>
-          <h2 className="map-heading reveal-fade-up delay-200">The Map</h2>
-          <p className="map-subtext reveal-fade-up delay-400">
-            Where the story began — the ancient land of Mithila paintings and timeless traditions.
-          </p>
+        {/* Intro/Summary */}
+        <div className="profile-intro reveal-fade-up delay-300">
+          "Seeking a highly responsible position where I can leverage my strong communication, leadership, and problem-solving skills—honed through extensive training and professional development initiatives—to drive team success and contribute positively to organizational goals. Proven ability to handle multiple projects simultaneously with a high degree of transparency and impact."
         </div>
 
-        <div className="map-container reveal-scale delay-300">
-          <div className="map-frame">
+        {/* PRIMARY GRID LAYOUT */}
+        <div className="grid-layout">
+          
+          {/* Card 1: Khsamtalaya / Magic Bus */}
+          <Card3D className="active-card span-col reveal-fade-up">
+            <div className="meta-row">
+              <span>PRESENT // PROJECT MGR & ASST REGIONAL MANAGER</span>
+              <IconNetwork />
+            </div>
+            <h2 className="card-title">School Excellence & Training Synapse</h2>
+            <p className="card-desc">
+              Spearheading program implementation across Samastipur and Himachal Pradesh. 
+              Engineering capacity-building interface layers and AI-based learning modules for teachers. 
+              Oversaw comprehensive blended learning deployments for last-mile education.
+            </p>
+            <ul className="card-bullets">
+              <li>Led program implementation in collaboration with state education systems.</li>
+              <li>Trained staff on integrating AI tools, digital presentation, and LMS tracking.</li>
+              <li>Drove community-based approaches and oversaw budget and fellowship recruitment.</li>
+            </ul>
+            <div className="pills-row">
+              <span className="pill active">CAPACITY BUILDING</span>
+              <span className="pill">AI TOOLS</span>
+              <span className="pill">LMS MONITORING</span>
+            </div>
+          </Card3D>
+
+          {/* Card 2: Piramal Foundation */}
+          <Card3D className="reveal-fade-up delay-100">
+            <div className="meta-row">
+              <IconDNA width="16" />
+              <span className="meta-link">ACTIVE LINK</span>
+            </div>
+            <h2 className="card-title" style={{fontSize: '1.6rem'}}>Fellow & Trainer<br/>(Piramal Foundation)</h2>
+            <p className="card-desc" style={{fontSize: '0.9rem'}}>
+              Urban Entrepreneurship Fellowship, Pune. Designed and developed contextualized content for FLN, Life Skills, and Employability across 45+ structured training sessions.
+            </p>
+            <div className="skills-grid">
+              <span className="skill-tag highlight">Curriculum Design</span>
+              <span className="skill-tag">Mentoring</span>
+              <span className="skill-tag">Data Review</span>
+            </div>
+            
+            <div className="stats-row">
+              <div className="stat-block">
+                <div className="stat-value purple">40K+</div>
+                <div className="stat-label">Children Impacted</div>
+              </div>
+            </div>
+          </Card3D>
+
+          {/* Card 3: ESIC / Strategic Partnerships */}
+          <Card3D className="reveal-fade-up delay-200">
+            <div className="meta-row">
+              <span>2019 — 2021 (APPROX LOGS)</span>
+            </div>
+            <h2 className="card-title" style={{fontSize: '1.6rem'}}>Strategic Partnerships & ESIC Integration</h2>
+            <p className="card-desc" style={{fontSize: '0.9rem'}}>
+              Built collaborative partnerships with ESIC and local governance. Partnered with 65+ companies to integrate services and LMS-based modules. 
+              Mentored field teams for processing registrations and claims.
+            </p>
+            <div className="stats-row">
+              <div className="stat-block">
+                <div className="stat-value">5,000+</div>
+                <div className="stat-label">Insured Persons</div>
+              </div>
+              <div className="stat-block">
+                <div className="stat-value">65+</div>
+                <div className="stat-label">Corporate Partners</div>
+              </div>
+            </div>
+          </Card3D>
+
+        </div>
+
+        {/* Certifications and Secondary Block */}
+        <div className="grid-layout">
+          <Card3D className="reveal-fade-up">
+            <h2 className="card-title" style={{fontSize: '1.5rem'}}>Academic Databanks</h2>
+            <p className="card-desc">Records of formal education vectors.</p>
+            <ul className="card-bullets">
+              <li><strong>MA (Sociology)</strong> — Central University of South Bihar, Gaya. Report: "Liquor and its negative impact on social fabric in Bihar"</li>
+              <li><strong>Bachelor of Business Administration</strong> — LNMU, Darbhanga</li>
+            </ul>
+          </Card3D>
+          
+          <Card3D className="reveal-fade-up delay-100">
+            <h2 className="card-title" style={{fontSize: '1.5rem'}}>Certified Protocol Matrices</h2>
+            <div className="skills-grid">
+              <span className="skill-tag highlight">Project Management (Kaivalya)</span>
+              <span className="skill-tag highlight">Lean Six Sigma</span>
+              <span className="skill-tag">Soft Skill Master Trainer (NIST)</span>
+              <span className="skill-tag">Evaluation of Training (VVGNLI)</span>
+              <span className="skill-tag">NSDC Digital Marketing</span>
+              <span className="skill-tag">Chat GPT Workshop</span>
+            </div>
+          </Card3D>
+        </div>
+
+        {/* MAP SECTION - Deployments */}
+        <div className="deployments-map reveal-fade-up">
+          <div className="temporal-log">GEOSPATIAL DEPLOYMENTS</div>
+          <h2 className="page-title" style={{fontSize: '3rem', marginBottom: '2rem'}}>Operational Zones</h2>
+          <div className="map-container">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57327.89671454382!2d86.05!3d26.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39edeb0a69b0a4e3%3A0xc4053f4776a1e3bf!2sMadhubani%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113911.2185590933!2d85.9329!3d26.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39edeb0a69b0a4e3%3A0xc4053f4776a1e3bf!2sMadhubani%2C%20Bihar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Madhubani, Bihar"
+              title="Deployment Map"
             ></iframe>
           </div>
-          <div className="map-location-tag reveal-fade-up delay-600">
-            <span className="map-dot"></span>
-            Madhubani, Bihar — India
-          </div>
         </div>
-      </section>
 
-      {/* Letters Section */}
-      <section id="letters" className="letters-section">
-        <div className="letters-card reveal-scale">
-          <div className="reveal-fade-up delay-200">
-            <EnvelopeIcon />
+        {/* Bottom Manifest */}
+        <div className="contact-pulse reveal-fade-up delay-200">
+          <div>
+            <span className="pulse-indicator"></span>
+            <strong>CONTACT-PULSE:</strong> deepakanmol26@gmail.com // +91 9509603144
           </div>
-          <h2 className="letters-heading reveal-fade-up delay-300">The Private Correspondence</h2>
-          <p className="letters-text reveal-fade-up delay-400">
-            A limited selection of handwritten letters and digital notes exchanged through the years. Accessible only to those with the golden thread.
-          </p>
-          <div className="reveal-fade-up delay-600">
-            <button className="btn-primary">REQUEST ACCESS</button>
+          <div className="collab-list">
+            LINKEDIN <span>/in/deepakanmol</span>
           </div>
         </div>
-      </section>
 
-      {/* Footer Section */}
-      <footer className="footer">
-        <div className="footer-brand reveal-fade-in delay-200">Deepak & Arunima</div>
-        <div className="footer-links reveal-fade-in delay-400">
-          <a href="#">PRIVACY</a>
-          <a href="#">TERMS</a>
-          <a href="#">CONTACT</a>
-        </div>
-        <div className="footer-copy reveal-fade-in delay-600">
-          © 2024 DEEPAK & ARUNIMA ... A DIGITAL MONOGRAPH
-        </div>
-      </footer>
+      </main>
     </div>
   );
 }
